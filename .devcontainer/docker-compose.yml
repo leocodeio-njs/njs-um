@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GH_TOKEN: ${GH_TOKEN}
+    env_file:
+      - ../.env
+    volumes:
+      - ..:/workspace:cached
+      - web-node-modules:/workspace/backend/node_modules:delegated
+      - pnpm-store:/home/node/.pnpm-store:cached
+      - newman-reports:/workspace/backend/newman/reports:delegated
+    command: sleep infinity
+
+    # Forward ports for development
+    ports:
+      - "3000:3000" # NestJS API
+      - "24678:24678" # Vite HMR
+
+    # Use devcontainer network to access other services
+    networks:
+      - devcontainer-network
+
+    # Extra container configuration
+    environment:
+      - TZ=UTC
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/everest
+      - GITLAB_API_URL=https://gitlab.com/api/v4
+
+    # Overrides default command so things don't shut down after setup
+    depends_on:
+      - db
+
+  # The rest of your services (db, pgadmin, etc.) remain unchanged
+  db:
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: everest
+    ports:
+      - "5432:5432"
+    networks:
+      - devcontainer-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: a@me.com
+      PGADMIN_DEFAULT_PASSWORD: Bruno123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - devcontainer-network
+
+networks:
+  devcontainer-network:
+
+volumes:
+  postgres-data:
+  go-cache:
+  web-node-modules:
+  pnpm-store:
+  newman-reports:

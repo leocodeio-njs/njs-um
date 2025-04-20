@@ -1,0 +1,10 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cd backend || exit 1
+
+# Set Git editor to avoid Vim swap files
+export EDITOR="cat"
+
+# Validate commit message AFTER Commitizen finishes
+pnpm commitlint --edit "$1"

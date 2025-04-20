@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  api:
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: host.docker.internal
+
+    container_name: api
+    build:
+      context: .
+      dockerfile: backend/dockerfile
+      target: prod
+
+    volumes:
+      - ./backend:/var/api
+
+    ports:
+      - 3000:3000
+
+    networks:
+      - apin
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    command: ["pm2-runtime", "dist/main.js"]
+
+networks:
+  apin:
+    name: api
+
+volumes:
+  data:

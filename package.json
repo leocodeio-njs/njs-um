@@ -1,0 +1,10 @@
+{
+  "name": "auth-api",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "commit": "cd backend && pnpm commit"
+  }
+}

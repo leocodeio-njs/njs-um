@@ -1,0 +1,29 @@
+{
+    "name": "NestJS Dev Environment",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspace",
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "ms-azuretools.vscode-docker",
+                "nestjs.nestjs-files",
+                "streetsidesoftware.code-spell-checker",
+                "mikestead.dotenv",
+                "christian-kohler.path-intellisense",
+                "rangav.vscode-thunder-client"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "postCreateCommand": "sudo mkdir -p /home/node/.pnpm-store && sudo chmod -R 777 /home/node/.pnpm-store && sudo chown -R node:node /home/node/.pnpm-store && pnpm config set store-dir /home/node/.pnpm-store && pnpm config set node-linker=hoisted && pnpm config set @Netlabs-Australia-Pty-Ltd:registry https://npm.pkg.github.com/ && pnpm config set //npm.pkg.github.com/:_authToken $GH_TOKEN && pnpm config set always-auth true && cd backend && pnpm install",
+    "remoteUser": "node",
+    "updateRemoteUserUID": true
+}

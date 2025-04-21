@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/leocodeio-njs/njs-um/compare/v1.1.0...v1.1.1) (2025-04-21)
+
+
+### Performance Improvements
+
+* **health updated:** health updated ([3494eb5](https://github.com/leocodeio-njs/njs-um/commit/3494eb5f1aabdb30106410cbaeda6b6fb5248c57))
+
 # [1.1.0](https://github.com/leocodeio-njs/njs-um/compare/v1.0.0...v1.1.0) (2025-04-21)
 
 

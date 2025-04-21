@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/leocodeio-njs/njs-um/compare/v1.0.0...v1.1.0) (2025-04-21)
+
+
+### Features
+
+* **fixed import dep errors:** fixed import dep errors ([9caa5c1](https://github.com/leocodeio-njs/njs-um/commit/9caa5c1e2f6d62a0ef63ea23dd837afc6618ba29))
+
 # 1.0.0 (2025-04-20)
 
 

@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/leocodeio-njs/njs-um/compare/v1.1.2...v1.1.3) (2025-05-03)
+
+
+### Performance Improvements
+
+* **updated deps:** updated deps ([6313a24](https://github.com/leocodeio-njs/njs-um/commit/6313a24d5e024db75072529dbc8ceb5a43ca4f94))
+
 ## [1.1.2](https://github.com/leocodeio-njs/njs-um/compare/v1.1.1...v1.1.2) (2025-04-21)
 
 

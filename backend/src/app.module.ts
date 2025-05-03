@@ -3,13 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from '@leocodeio-njs/njs-config';
 import {
-  HealthModule,
   PerformanceInterceptor,
   ResponseInterceptor,
-} from '@leocodeio-njs/njs-health';
+} from '@leocodeio-njs/njs-logging';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigService } from '@leocodeio-njs/njs-config';
-import { PrometheusService } from '@leocodeio-njs/njs-health/dist/health/prometheus.service';
+
+import { HealthModule, PrometheusService } from '@leocodeio-njs/njs-health';
 
 @Module({
   imports: [

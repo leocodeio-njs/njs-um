@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "@leocodeio-njs/njs-config": "^1.0.10",
-    "@leocodeio-njs/njs-health": "^1.0.8",
+    "@leocodeio-njs/njs-health": "^1.0.10",
+    "@leocodeio-njs/njs-logging": "1.0.2",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.20",
     "@nestjs/config": "^4.0.2",

@@ -1,0 +1,67 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { IUserPort } from '../../domain/ports/user.port';
+import { IUser } from '../../domain/models/user.model';
+import { User } from '../entities/user.entity';
+import { userStatus } from '../../domain/enums/user_status.enum';
+import { AccessLevel } from '../../domain/enums/access-level.enum';
+
+@Injectable()
+export class TypeOrmUserRepository implements IUserPort {
+  constructor(
+    @InjectRepository(User)
+    private repository: Repository<User>,
+  ) {}
+
+  async findById(id: string): Promise<IUser | null> {
+    const user = await this.repository.findOne({ where: { id } });
+    return user ? this.toDomain(user) : null;
+  }
+
+  async findByIdentifier(identifier: string): Promise<IUser | null> {
+    const user = await this.repository.findOne({
+      where: [{ email: identifier }, { mobile: identifier }],
+    });
+    return user ? this.toDomain(user) : null;
+  }
+
+  async save(user: Partial<IUser>): Promise<IUser> {
+    console.log('user creation log 1', user);
+    const entity = this.repository.create(user);
+    console.log('user creation log 2', entity);
+    const savedUser = await this.repository.save(entity);
+    console.log('user creation log 3', savedUser);
+    return this.toDomain(savedUser);
+  }
+
+  async update(id: string, user: Partial<IUser>): Promise<IUser> {
+    await this.repository.update(id, user);
+    const updatedUser = await this.repository.findOne({ where: { id } });
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+    return this.toDomain(updatedUser);
+  }
+
+  private toDomain(schema: User): IUser {
+    return {
+      id: schema.id,
+      email: schema.email,
+      mobile: schema.mobile,
+      passwordHash: schema.passwordHash,
+      firstName: schema.firstName,
+      lastName: schema.lastName,
+      profilePicUrl: schema.profilePicUrl,
+      status: schema.status as userStatus,
+      deletedAt: schema.deletedAt,
+      twoFactorSecret: schema.twoFactorSecret,
+      twoFactorEnabled: schema.twoFactorEnabled,
+      lastLoginAt: schema.lastLoginAt,
+      allowedChannels: schema.allowedChannels,
+      accessLevel: schema.accessLevel as AccessLevel,
+      createdAt: schema.createdAt,
+      updatedAt: schema.updatedAt,
+    };
+  }
+}

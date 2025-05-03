@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigService } from '@leocodeio-njs/njs-config';
 
 import { HealthModule, PrometheusService } from '@leocodeio-njs/njs-health';
+import { ValidationModule } from './modules/validation/validation.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { HealthModule, PrometheusService } from '@leocodeio-njs/njs-health';
       }),
     }),
     HealthModule,
+    ValidationModule,
   ],
   controllers: [AppController],
   providers: [

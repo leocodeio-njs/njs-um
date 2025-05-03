@@ -1,0 +1,356 @@
+import {
+  Injectable,
+  Inject,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
+import { USER_REPOSITORY, USER_PREFERENCES_REPOSITORY } from './constants';
+
+// Import specialized services
+import { UserAuthenticationService } from './user-authentication.service';
+import { TokenManagementService } from './token-management.service';
+import { SessionManagementService } from './session-management.service';
+import { TwoFactorAuthService } from './two-factor-auth.service';
+import { MobileVerificationService } from './mobile-verification.service';
+import { UserRegistrationService } from './user-registration.service';
+
+import { AuthPolicyService } from './auth-policy.service';
+import { IUserPort } from 'src/modules/user/domain/ports/user.port';
+import {
+  CompleteMobileLoginDto,
+  InitiateMobileLoginDto,
+} from 'src/modules/user/application/dtos/mobile-login.dto';
+import {
+  CorrelationService,
+  DebugUtil,
+  LoggerService,
+} from '@leocodeio-njs/njs-logging';
+import { IUserPreferences } from 'src/modules/user/domain/models/user-preferences.model';
+import { IUserPreferencesPort } from 'src/modules/user/domain/ports/user-preferences.port';
+import { ISessionPort } from 'src/modules/session/domain/ports/session.port';
+import { LoginDto } from 'src/modules/user/application/dtos/login.dto';
+import { UserProfileDto } from 'src/modules/user/application/dtos/user-profile.dto';
+import { RegisterDto } from 'src/modules/user/application/dtos/register.dto';
+import { UpdateDto } from 'src/modules/user/application/dtos/update.dto';
+import { LogoutDto } from 'src/modules/user/application/dtos/logout.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @Inject(USER_REPOSITORY) private userPort: IUserPort,
+    @Inject(USER_PREFERENCES_REPOSITORY)
+    private userPreferencesRepository: IUserPreferencesPort,
+    @Inject('SESSION_REPOSITORY') private sessionRepository: ISessionPort,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    private readonly logger: LoggerService,
+    private readonly debugUtil: DebugUtil,
+    private readonly correlationService: CorrelationService,
+
+    // Inject specialized services
+    private readonly userAuthService: UserAuthenticationService,
+    private readonly tokenService: TokenManagementService,
+    private readonly sessionService: SessionManagementService,
+    private readonly twoFactorService: TwoFactorAuthService,
+    private readonly mobileVerificationService: MobileVerificationService,
+    private readonly userRegistrationService: UserRegistrationService,
+  ) {
+    this.logger.setLogContext('AuthService');
+  }
+
+  // User validation (for passport strategy)
+  async validateUser(identifier: string, password: string): Promise<any> {
+    this.logger.debug('Validating user credentials', {
+      identifier,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.userAuthService.validateUser(identifier, password);
+  }
+
+  // Login
+  async login(user: any, loginDto: LoginDto) {
+    this.logger.debug('Processing login request', {
+      userId: user.id,
+      channel: loginDto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.userAuthService.login(user, loginDto);
+  }
+
+  // Registration
+  async register(dto: RegisterDto): Promise<UserProfileDto> {
+    this.logger.debug('Processing registration request', {
+      email: dto.email,
+      channel: dto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.userRegistrationService.register(dto);
+  }
+
+  // Update user
+  async update(dto: UpdateDto, id: string): Promise<UserProfileDto> {
+    this.logger.debug('Processing user update request', {
+      userId: id,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.userRegistrationService.update(dto, id);
+  }
+
+  // Logout
+  async logout(logoutDto: LogoutDto): Promise<void> {
+    this.logger.debug('Processing logout request', {
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.userAuthService.logout(logoutDto);
+  }
+
+  // Refresh token
+  async refreshAccessToken(refreshToken: string): Promise<{
+    access_token: string;
+    refresh_token: string;
+    sessionId: string;
+  }> {
+    this.logger.debug('Processing token refresh request', {
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.tokenService.refreshAccessToken(refreshToken);
+  }
+
+  // Two-factor authentication setup
+  async setup2FA(userId: string): Promise<{
+    secret: string;
+    qrCode: string;
+    backupCodes: string[];
+  }> {
+    this.logger.debug('Setting up 2FA for user', {
+      userId,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.twoFactorService.setup2FA(userId);
+  }
+
+  // Token validation
+  async validateToken(
+    userId: string,
+    channel: string,
+    clientId?: string,
+    baseUrl?: string,
+    baseMethod?: string,
+  ): Promise<boolean> {
+    this.logger.debug('Validating token authorization', {
+      userId,
+      channel,
+      clientId,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.tokenService.validateToken(
+      userId,
+      channel,
+      clientId,
+      baseUrl,
+      baseMethod,
+    );
+  }
+
+  // Mobile verification
+  async requestMobileOTP(mobile: string): Promise<string> {
+    this.logger.debug('Requesting mobile OTP', {
+      mobile,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.mobileVerificationService.requestMobileOTP(mobile);
+  }
+
+  // OTP verification
+  async verifyOTP(mobile: string, code: string): Promise<boolean> {
+    this.logger.debug('Verifying OTP', {
+      mobile,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    return this.mobileVerificationService.verifyOTP(mobile, code);
+  }
+
+  // Get user profile
+  async getUserProfile(userId: string): Promise<UserProfileDto> {
+    this.logger.debug('Retrieving user profile', {
+      userId,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    const user = await this.userPort.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const userPreferences =
+      await this.userPreferencesRepository.findByUserId(userId);
+    if (!userPreferences) {
+      throw new UnauthorizedException('User preferences not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      mobile: user.mobile,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profilePicUrl: user.profilePicUrl || '',
+      language: userPreferences.language,
+      theme: userPreferences.theme,
+      timeZone: userPreferences.timeZone,
+      twoFactorEnabled: user.twoFactorEnabled,
+      allowedChannels: user.allowedChannels,
+      accessLevel: user.accessLevel,
+      lastLoginAt: user.lastLoginAt,
+      createdAt: user.createdAt,
+    };
+  }
+
+  // Get user's active sessions
+  async getUserSessions(accessToken: string) {
+    this.logger.debug('Retrieving user sessions', {
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    try {
+      const decoded = this.jwtService.verify(accessToken, {
+        secret: this.configService.get('JWT_SECRET'),
+      });
+
+      if (!decoded.sub) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      return this.sessionService.getUserSessions(decoded.sub);
+    } catch (error) {
+      if (
+        error.name === 'JsonWebTokenError' ||
+        error.name === 'TokenExpiredError'
+      ) {
+        throw new UnauthorizedException('Invalid or expired token');
+      }
+      throw error;
+    }
+  }
+
+  // Mobile login initialization
+  async initiateMobileLogin(
+    dto: InitiateMobileLoginDto,
+  ): Promise<{ reference: string }> {
+    this.logger.debug('Initiating mobile login', {
+      mobile: dto.mobile,
+      channel: dto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    // Check if user exists first
+    const user = await this.userPort.findByIdentifier(dto.mobile);
+    if (!user) {
+      throw new UnauthorizedException(
+        'Please register before attempting to login. Registration requires both email and mobile number.',
+      );
+    }
+
+    // Generate and send OTP through the mobile verification service
+    const reference = await this.mobileVerificationService.requestMobileOTP(
+      dto.mobile,
+    );
+    return { reference };
+  }
+
+  // Complete mobile login
+  async completeMobileLogin(dto: CompleteMobileLoginDto): Promise<{
+    access_token: string;
+    refresh_token: string;
+    sessionId: string;
+  }> {
+    this.logger.debug('Completing mobile login', {
+      mobile: dto.mobile,
+      channel: dto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    // Verify user exists with complete profile
+    const user = await this.userPort.findByIdentifier(dto.mobile);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.email || !user.mobile) {
+      throw new UnauthorizedException(
+        'Incomplete registration. Please complete registration with both email and mobile number.',
+      );
+    }
+
+    // Verify OTP
+    const isValid = await this.mobileVerificationService.verifyOTP(
+      dto.mobile,
+      dto.otp,
+    );
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid OTP');
+    }
+
+    // Create session and tokens
+    const sessionId = crypto.randomUUID();
+    const tokenFamily = crypto.randomUUID();
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.tokenService.generateAccessToken(user, sessionId, dto.channel),
+      this.tokenService.generateRefreshToken(user.id, sessionId, tokenFamily),
+    ]);
+
+    // Create session
+    await this.sessionService.createSession({
+      id: sessionId,
+      userId: user.id,
+      deviceInfo: `${dto.channel}${dto.userAgent ? ` - ${dto.userAgent}` : ''}`,
+      channel: dto.channel,
+      refreshTokenFamily: tokenFamily,
+      userAgent: dto.userAgent,
+      metadata: {
+        loginMethod: 'mobile_otp',
+      },
+    });
+
+    // Update user's last login
+    await this.userPort.update(user.id, {
+      lastLoginAt: new Date(),
+    });
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      sessionId,
+    };
+  }
+
+  // Check if user exists
+  async isUserExists(
+    type: 'email' | 'mobile',
+    identifier: string,
+  ): Promise<boolean> {
+    this.logger.debug('Checking if user exists', {
+      type,
+      identifier,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    const user = await this.userPort.findByIdentifier(identifier);
+    return !!user;
+  }
+}

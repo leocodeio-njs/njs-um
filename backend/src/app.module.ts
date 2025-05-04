@@ -3,6 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from '@leocodeio-njs/njs-config';
 import {
+  LogEntry,
+  LoggerService,
+  LoggingInterceptor,
+  LoggingModule,
   PerformanceInterceptor,
   ResponseInterceptor,
 } from '@leocodeio-njs/njs-logging';
@@ -10,11 +14,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigService } from '@leocodeio-njs/njs-config';
 
 import { HealthModule, PrometheusService } from '@leocodeio-njs/njs-health';
+
+// modules
 import { ValidationModule } from './modules/validation/validation.module';
+import { UserModule } from './modules/user/user-auth.module';
+import { OtpModule } from './modules/otp/otp.module';
+import { SessionModule } from './modules/session/session.module';
 
 @Module({
   imports: [
     AppConfigModule,
+
     TypeOrmModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [AppConfigService],
@@ -27,13 +37,27 @@ import { ValidationModule } from './modules/validation/validation.module';
         autoLoadEntities: true,
       }),
     }),
+    TypeOrmModule.forFeature([LogEntry]),
+    LoggingModule.forRoot({
+      entities: [LogEntry],
+      winston: {
+        console: true,
+        file: {
+          enabled: true,
+        },
+      },
+    }),
     HealthModule,
     ValidationModule,
+    UserModule,
+    SessionModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     PrometheusService,
+    LoggerService,
     {
       provide: 'APP_INTERCEPTOR',
       useClass: PerformanceInterceptor,
@@ -41,6 +65,10 @@ import { ValidationModule } from './modules/validation/validation.module';
     {
       provide: 'APP_INTERCEPTOR',
       useClass: ResponseInterceptor,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
     },
   ],
 })

@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/leocodeio-njs/njs-um/compare/v1.1.5...v1.1.6) (2025-05-04)
+
+
+### Performance Improvements
+
+* **updated pkgs:** updated pkgs ([d0a4d79](https://github.com/leocodeio-njs/njs-um/commit/d0a4d79cbf038cf093bcb2795f4856005262fcb1))
+
 ## [1.1.5](https://github.com/leocodeio-njs/njs-um/compare/v1.1.4...v1.1.5) (2025-05-04)
 
 

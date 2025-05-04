@@ -4,14 +4,14 @@ import { IsPhoneValidDto } from '../../application/dtos/is-phone-valid.dto';
 import { IsEmailValidDto } from '../../application/dtos/is-email-valid.dto';
 import { ExistsPhoneDto } from '../../application/dtos/exists-phone.dto';
 import { ExistsEmailDto } from '../../application/dtos/exists-email.dto';
-// import { UserRepository } from 'src/modules/authorization/domain/ports/user.repository';
+import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 
 @Controller('validate')
 // @ApiSecurity('x-api-key')
 export class ValidationController {
   constructor(
     private readonly validationService: ValidationService,
-    // private readonly userRepository: UserRepository,
+    private readonly userRepository: IUserPort,
   ) {}
   // IsPhone valid
   @Post('phone')
@@ -23,11 +23,10 @@ export class ValidationController {
 
   @Post('/exists/phone')
   async existsPhone(@Body() existsPhoneDto: ExistsPhoneDto): Promise<boolean> {
-    // const user = await this.userRepository.findByIdentifier(
-    //   existsPhoneDto.phone,
-    // );
-    // return user !== null;
-    return true;
+    const user = await this.userRepository.findByIdentifier(
+      existsPhoneDto.phone,
+    );
+    return user !== null;
   }
 
   // IsEmail valid
@@ -40,11 +39,10 @@ export class ValidationController {
 
   @Post('exists/email')
   async existsEmail(@Body() existsEmailDto: ExistsEmailDto): Promise<boolean> {
-    // const user = await this.userRepository.findByIdentifier(
-    //   existsEmailDto.email,
-    // );
-    // return user !== null;
-    return true;
+    const user = await this.userRepository.findByIdentifier(
+      existsEmailDto.email,
+    );
+    return user !== null;
   }
 
   // IsAcessTokenValid

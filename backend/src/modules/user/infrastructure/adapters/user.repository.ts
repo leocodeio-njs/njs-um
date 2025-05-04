@@ -8,7 +8,7 @@ import { userStatus } from '../../domain/enums/user_status.enum';
 import { AccessLevel } from '../../domain/enums/access-level.enum';
 
 @Injectable()
-export class TypeOrmUserRepository implements IUserPort {
+export class UserRepositoryAdapter implements IUserPort {
   constructor(
     @InjectRepository(User)
     private repository: Repository<User>,

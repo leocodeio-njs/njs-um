@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/leocodeio-njs/njs-um/compare/v1.1.4...v1.1.5) (2025-05-04)
+
+
+### Bug Fixes
+
+* **fixed deps:** fixed deps ([c747ff0](https://github.com/leocodeio-njs/njs-um/commit/c747ff020d53487ecd13356836955df1bc4c7c33))
+
 ## [1.1.4](https://github.com/leocodeio-njs/njs-um/compare/v1.1.3...v1.1.4) (2025-05-03)
 
 

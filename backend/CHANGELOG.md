@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/leocodeio-njs/njs-um/compare/v1.1.6...v1.2.0) (2025-05-04)
+
+
+### Features
+
+* **validation working:** validation working ([743160f](https://github.com/leocodeio-njs/njs-um/commit/743160fea17b141139310cbc89303d0fd6f32a02))
+
 ## [1.1.6](https://github.com/leocodeio-njs/njs-um/compare/v1.1.5...v1.1.6) (2025-05-04)
 
 

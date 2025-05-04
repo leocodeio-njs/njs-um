@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { TokenPayload } from '../types/token';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
-import { USER_REPOSITORY } from './constants';
+import { SESSION_REPOSITORY, USER_REPOSITORY } from './constants';
 import { SessionManagementService } from './session-management.service';
 import { AuthPolicyService } from './auth-policy.service';
 import { ISessionPort } from 'src/modules/session/domain/ports/session.port';
@@ -32,7 +32,7 @@ export class TokenManagementService {
 
   constructor(
     @Inject(USER_REPOSITORY) private userRepository: IUserPort,
-    @Inject('SESSION_REPOSITORY') private sessionRepository: ISessionPort,
+    @Inject(SESSION_REPOSITORY) private sessionRepository: ISessionPort,
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly logger: LoggerService,

@@ -1,16 +1,33 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseFilters,
+  UseGuards,
+} from '@nestjs/common';
 import { ValidationService } from '../../application/services/validation.service';
 import { IsPhoneValidDto } from '../../application/dtos/is-phone-valid.dto';
 import { IsEmailValidDto } from '../../application/dtos/is-email-valid.dto';
 import { ExistsPhoneDto } from '../../application/dtos/exists-phone.dto';
 import { ExistsEmailDto } from '../../application/dtos/exists-email.dto';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
+import { ApiOperation } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { AuthExceptionFilter } from 'src/filters/auth-exceptions.filter';
+import { ValidateTokenDto } from '../../application/dtos/validate-token.dto';
+import { AuthService } from 'src/services/auth.service';
+import { Request } from 'express';
+import { RefreshTokenDto } from '../../application/dtos/refresh-token.dto';
 
 @Controller('validate')
 // @ApiSecurity('x-api-key')
 export class ValidationController {
   constructor(
     private readonly validationService: ValidationService,
+    private readonly authService: AuthService,
     private readonly userRepository: IUserPort,
   ) {}
   // IsPhone valid
@@ -47,4 +64,33 @@ export class ValidationController {
 
   // IsAcessTokenValid
   // IsRefreshTokenValid
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'User validate' })
+  @Post('acesstoken')
+  @UseFilters(AuthExceptionFilter)
+  async validateToken(
+    @Req() req: Request,
+    @Body() validateTokenDto: ValidateTokenDto,
+  ) {
+    const isValid = await this.authService.validateToken(
+      req.user.id,
+      validateTokenDto.channel,
+      validateTokenDto.clientId,
+      req.user.baseUrl,
+      req.user.baseMethod,
+    );
+
+    return {
+      valid: isValid,
+      userId: req.user.id,
+      channel: validateTokenDto.channel,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh your access token' })
+  @Post('refresh')
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshAccessToken(refreshTokenDto.refreshToken);
+  }
 }

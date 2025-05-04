@@ -2,23 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { IOtp } from './../../domain/models/otp.model';
-import { OTPSchema } from '../entities/otp.entity';
-
-export interface OTPRepository {
-  save(otp: Partial<IOtp>): Promise<IOtp>;
-  verify(mobile: string, code: string): Promise<boolean>;
-  findPendingOTP(mobile: string): Promise<IOtp | null>;
-  markAsVerified(id: string): Promise<void>;
-  delete(id: string): Promise<void>;
-  findByReference(reference: string): Promise<IOtp | null>;
-  deleteByReference(reference: string): Promise<void>;
-}
+import { OTP } from '../entities/otp.entity';
+import { IOtpPort } from '../../domain/ports/otp.port';
 
 @Injectable()
-export class TypeOrmOTPRepository implements OTPRepository {
+export class OTPRepositoryAdaptor implements IOtpPort {
   constructor(
-    @InjectRepository(OTPSchema)
-    private repository: Repository<OTPSchema>,
+    @InjectRepository(OTP)
+    private repository: Repository<OTP>,
   ) {}
 
   async save(otp: Partial<IOtp>): Promise<IOtp> {

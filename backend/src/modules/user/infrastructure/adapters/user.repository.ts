@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IUserPort } from '../../domain/ports/user.port';
@@ -6,13 +6,11 @@ import { IUser } from '../../domain/models/user.model';
 import { User } from '../entities/user.entity';
 import { userStatus } from '../../domain/enums/user_status.enum';
 import { AccessLevel } from '../../domain/enums/access-level.enum';
+import { USER_REPOSITORY } from 'src/services/constants';
 
 @Injectable()
 export class UserRepositoryAdapter implements IUserPort {
-  constructor(
-    @InjectRepository(User)
-    private repository: Repository<User>,
-  ) {}
+  constructor(@Inject(USER_REPOSITORY) private repository: Repository<User>) {}
 
   async findById(id: string): Promise<IUser | null> {
     const user = await this.repository.findOne({ where: { id } });

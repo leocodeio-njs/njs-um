@@ -62,6 +62,14 @@ import { ConfigModule } from '@nestjs/config';
           .required(),
         AUTHORIZER_API_KEY: Joi.string().default('validkey1').required(),
         CLUSTER_CLIENT_ID: Joi.string().default('validclient1').required(),
+
+        // validation
+        ACCESS_TOKEN_SECRET: Joi.string()
+          .default('access-token-secret')
+          .required(),
+        REFRESH_TOKEN_SECRET: Joi.string()
+          .default('refresh-token-secret')
+          .required(),
       }),
     }),
     AppConfigModule,

@@ -1,16 +1,16 @@
 // auth/infrastructure/persistence/typeorm/session.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, MoreThan, Repository } from 'typeorm';
-import { SessionSchema } from '../entities/session.entity';
+import { Session } from '../entities/session.entity';
 import { ISessionPort } from '../../domain/ports/session.port';
 import { ISession } from '../../domain/models/session.model';
+import { SESSION_REPOSITORY } from 'src/services/constants';
 
 @Injectable()
-export class TypeOrmSessionRepository implements ISessionPort {
+export class SessionRepositoryAdapter implements ISessionPort {
   constructor(
-    @InjectRepository(SessionSchema)
-    private repository: Repository<SessionSchema>,
+    @Inject(SESSION_REPOSITORY) private repository: Repository<Session>,
   ) {
     // Set up periodic cleanup of expired sessions
     setInterval(() => this.cleanupExpiredSessions(), 1000 * 60 * 60); // Run every hour
@@ -148,7 +148,7 @@ export class TypeOrmSessionRepository implements ISessionPort {
     return sessions.map((s) => this.toDomain(s));
   }
 
-  private toDomain(schema: SessionSchema): ISession {
+  private toDomain(schema: Session): ISession {
     return {
       id: schema.id,
       userId: schema.userId,

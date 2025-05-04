@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('otps')
-export class OTPSchema {
+export class OTP {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

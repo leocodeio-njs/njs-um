@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity('sessions')
-export class SessionSchema {
+export class Session {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

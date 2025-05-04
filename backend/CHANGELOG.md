@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/leocodeio-njs/njs-um/compare/v1.2.0...v1.2.1) (2025-05-04)
+
+
+### Performance Improvements
+
+* **added implemetation for accesstoken validation:** added implemetation for accesstoken validation ([6570936](https://github.com/leocodeio-njs/njs-um/commit/6570936295665e77c926aca960280149d29e30b9))
+
 # [1.2.0](https://github.com/leocodeio-njs/njs-um/compare/v1.1.6...v1.2.0) (2025-05-04)
 
 

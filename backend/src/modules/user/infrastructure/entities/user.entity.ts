@@ -73,7 +73,4 @@ export class User {
 
   @Column('simple-array', { nullable: true })
   backupCodes?: string[];
-
-  @Column({ default: 'trail', name: 'subscription_tier' })
-  subscriptionTier?: string;
 }

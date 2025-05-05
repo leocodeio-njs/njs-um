@@ -15,7 +15,6 @@ import { Request } from 'express';
 import { LoginDto } from '../../application/dtos/login.dto';
 import { IpRateLimitGuard } from '@leocodeio-njs/njs-auth';
 import { RefreshTokenDto } from '../../../validation/application/dtos/refresh-token.dto';
-import { ValidateTokenDto } from '../../../validation/application/dtos/validate-token.dto';
 import { LogoutDto } from '../../application/dtos/logout.dto';
 import { AuthService } from 'src/services/auth.service';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';

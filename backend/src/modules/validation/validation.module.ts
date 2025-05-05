@@ -3,7 +3,7 @@ import { ValidationService } from './application/services/validation.service';
 import { ValidationController } from './presentation/controllers/validation.controller';
 import { JwtService } from '@nestjs/jwt';
 
-import { UserRegistrationService } from 'src/services/user-registration.service';
+import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
 import { UserAuthenticationService } from 'src/services/user-authentication.service';
 import { AuthService } from 'src/services/auth.service';
 import { AuthPolicyService } from 'src/services/auth-policy.service';
@@ -24,6 +24,8 @@ import { MobileVerificationService } from 'src/services/mobile-verification.serv
 import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
 import { IOtpPort } from '../otp/domain/ports/otp.port';
 import { otpProvider } from '../otp/infrastructure/providers/session.provider';
+import { IUserPreferencesPort } from '../user/domain/ports/user-preferences.port';
+import { UserPreferencesRepositoryAdapter } from '../user/infrastructure/adapters/user-preferences.repository';
 
 @Module({
   imports: [],
@@ -43,6 +45,10 @@ import { otpProvider } from '../otp/infrastructure/providers/session.provider';
     {
       provide: IUserPort,
       useClass: UserRepositoryAdapter,
+    },
+    {
+      provide: IUserPreferencesPort,
+      useClass: UserPreferencesRepositoryAdapter,
     },
     {
       provide: ISessionPort,

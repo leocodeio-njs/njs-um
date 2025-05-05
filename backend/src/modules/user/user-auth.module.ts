@@ -12,10 +12,17 @@ import { TokenManagementService } from 'src/services/token-management.service';
 import { SessionManagementService } from 'src/services/session-management.service';
 import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
 import { MobileVerificationService } from 'src/services/mobile-verification.service';
-import { UserRegistrationService } from 'src/services/user-registration.service';
+import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
 import { RateLimiterService } from 'src/services/rate-limiter.service';
 import { AuthPolicyService } from 'src/services/auth-policy.service';
 import { otpProvider } from '../otp/infrastructure/providers/session.provider';
+import { IUserPreferences } from './domain/models/user-preferences.model';
+import { IUserPort } from './domain/ports/user.port';
+import { UserRepositoryAdapter } from './infrastructure/adapters/user.repository';
+import { UserPreferencesRepositoryAdapter } from './infrastructure/adapters/user-preferences.repository';
+import { IUserPreferencesPort } from './domain/ports/user-preferences.port';
+import { IOtpPort } from '../otp/domain/ports/otp.port';
+import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserPreferences])],
@@ -31,6 +38,18 @@ import { otpProvider } from '../otp/infrastructure/providers/session.provider';
     UserRegistrationService,
     RateLimiterService,
     AuthPolicyService,
+    {
+      provide: IUserPort,
+      useClass: UserRepositoryAdapter,
+    },
+    {
+      provide: IUserPreferencesPort,
+      useClass: UserPreferencesRepositoryAdapter,
+    },
+    {
+      provide: IOtpPort,
+      useClass: OTPRepositoryAdaptor,
+    },
     ...usersProvider,
     ...sessionProvider,
     ...otpProvider,

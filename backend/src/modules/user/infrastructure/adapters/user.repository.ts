@@ -25,6 +25,27 @@ export class UserRepositoryAdapter implements IUserPort {
   }
 
   async save(user: Partial<IUser>): Promise<IUser> {
+    // save user to the database
+    // const user = await manager.save(User, {
+    //   email: dto.email,
+    //   mobile: dto.mobile,
+    //   firstName: dto.firstName,
+    //   lastName: dto.lastName,
+    //   profilePicUrl: dto.profilePicUrl,
+    //   passwordHash,
+    //   status: userStatus.ACTIVE,
+    //   allowedChannels: ['mobile', 'web'],
+    //   accessLevel: accessLevel,
+    //   twoFactorEnabled: false,
+    // });
+
+    // save user preferences to the database
+    // const userPreferences = await manager.save(UserPreferences, {
+    //   userId: user.id,
+    //   language: dto.language,
+    //   theme: dto.theme,
+    //   timeZone: dto.timeZone,
+    // });
     console.log('user creation log 1', user);
     const entity = this.repository.create(user);
     console.log('user creation log 2', entity);

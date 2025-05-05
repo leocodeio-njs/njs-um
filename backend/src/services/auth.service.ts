@@ -16,7 +16,7 @@ import { TokenManagementService } from './token-management.service';
 import { SessionManagementService } from './session-management.service';
 import { TwoFactorAuthService } from './two-factor-auth.service';
 import { MobileVerificationService } from './mobile-verification.service';
-import { UserRegistrationService } from './user-registration.service';
+import { UserRegistrationService } from '../modules/user/application/services/user-registration.service';
 
 import { AuthPolicyService } from './auth-policy.service';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';

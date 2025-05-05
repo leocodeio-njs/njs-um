@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/leocodeio-njs/njs-um/compare/v1.2.2...v1.2.3) (2025-05-05)
+
+
+### Performance Improvements
+
+* **regiter flow:** regiter flow ([2381f67](https://github.com/leocodeio-njs/njs-um/commit/2381f675c6cf2cf1ffec297c204990ecb9dccf3e))
+
 ## [1.2.2](https://github.com/leocodeio-njs/njs-um/compare/v1.2.1...v1.2.2) (2025-05-05)
 
 

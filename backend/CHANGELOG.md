@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/leocodeio-njs/njs-um/compare/v1.2.1...v1.2.2) (2025-05-05)
+
+
+### Performance Improvements
+
+* **register without otp working:** register without otp working ([b6bc037](https://github.com/leocodeio-njs/njs-um/commit/b6bc037e74498ceecfacef2d08d78a106ba1e8a9))
+
 ## [1.2.1](https://github.com/leocodeio-njs/njs-um/compare/v1.2.0...v1.2.1) (2025-05-05)
 
 

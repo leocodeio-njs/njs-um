@@ -14,12 +14,20 @@ import {
   VerifyMobileDto,
 } from 'src/modules/validation/application/dtos/verify-mobile.dto';
 import { AuthService } from 'src/utils/services/auth.service';
+import { EmailjsMailerService } from '../../application/services/emailjs-mailer.service';
+import {
+  VerifyMailConfirmDto,
+  VerifyMailDto,
+} from 'src/modules/validation/application/dtos/verify-mail.dto';
 
 @UseGuards(IpRateLimitGuard)
 @ApiSecurity('x-api-key')
 @Controller('otp')
 export class OtpController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private emailjsMailerService: EmailjsMailerService,
+  ) {}
   @Post('verify-mobile')
   @ApiOperation({ summary: 'Request mobile OTP' })
   @HttpCode(HttpStatus.OK)
@@ -42,6 +50,34 @@ export class OtpController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Mobile number verified successfully',
+    };
+  }
+
+  @Post('verify-mail')
+  @ApiOperation({ summary: 'Request email OTP' })
+  @HttpCode(HttpStatus.OK)
+  async requestMailVerification(@Body() dto: VerifyMailDto) {
+    await this.emailjsMailerService.sendOtpMail(dto.email, dto.name);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Verification code sent',
+    };
+  }
+
+  @Post('verify-mail/confirm')
+  @ApiOperation({ summary: 'Confirm email OTP' })
+  @HttpCode(HttpStatus.OK)
+  async confirmMailVerification(@Body() dto: VerifyMailConfirmDto) {
+    const isValid = await this.emailjsMailerService.verifyOtpMail(
+      dto.email,
+      dto.code,
+    );
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid verification code');
+    }
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Email verified successfully',
     };
   }
 }

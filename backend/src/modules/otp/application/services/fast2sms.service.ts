@@ -79,6 +79,6 @@ export class Fast2SmsService implements SmsService {
   async checkVerification(mobile: string, otp: string): Promise<boolean> {
     const result = verifyTokenLib(mobile + 'AUTH' + this.toptSecret, otp);
     console.log('result', result);
-    return result.delta === 0;
+    return result?.delta === 0;
   }
 }

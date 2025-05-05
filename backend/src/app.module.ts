@@ -78,6 +78,15 @@ import { JwtModule } from '@nestjs/jwt';
 
         TEST_PHONE_NUMBERS: Joi.string().optional(),
 
+        // email
+        EMAIL_FROM: Joi.string().default('noreply@um.com').required(),
+        TOPT_SECRET: Joi.string().default('this-is-totp-secret').required(),
+        GMAIL_USER: Joi.string().optional().default('gmail-user').required(),
+        GMAIL_APP_PASSWORD: Joi.string()
+          .optional()
+          .default('gmail-user-password')
+          .required(),
+
         // jwt
         // access token
         JWT_SECRET: Joi.string()

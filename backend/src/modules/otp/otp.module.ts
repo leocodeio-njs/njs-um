@@ -24,6 +24,7 @@ import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/ses
 import { ISessionPort } from '../session/domain/ports/session.port';
 import { TokenManagementService } from '../session/application/services/token-management.service';
 import { SessionManagementService } from '../session/application/services/session-management.service';
+import { EmailjsMailerService } from './application/services/emailjs-mailer.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OTP])],
@@ -39,6 +40,7 @@ import { SessionManagementService } from '../session/application/services/sessio
     UserRegistrationService,
     RateLimiterService,
     AuthPolicyService,
+    EmailjsMailerService,
     {
       provide: ISessionPort,
       useClass: SessionRepositoryAdapter,

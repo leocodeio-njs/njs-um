@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/leocodeio-njs/njs-um/compare/v1.2.7...v1.2.8) (2025-05-05)
+
+
+### Performance Improvements
+
+* **refactored code:** refactored code ([01d6c1c](https://github.com/leocodeio-njs/njs-um/commit/01d6c1c08e2c9b4b7aac4808a73fbbac4e0e0194))
+
 ## [1.2.7](https://github.com/leocodeio-njs/njs-um/compare/v1.2.6...v1.2.7) (2025-05-05)
 
 ## [1.2.6](https://github.com/leocodeio-njs/njs-um/compare/v1.2.5...v1.2.6) (2025-05-05)

@@ -9,7 +9,7 @@ export class InitiateMobileLoginDto implements DeviceInfoDto {
     required: true,
   })
   @IsString()
-  @IsMobilePhone('en-US', { strictMode: false })
+  @IsMobilePhone()
   mobile: string;
 
   @ApiProperty({

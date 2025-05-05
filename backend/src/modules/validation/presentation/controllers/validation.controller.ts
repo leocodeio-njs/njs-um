@@ -23,6 +23,7 @@ import { Request } from 'express';
 
 @Controller('validate')
 @ApiSecurity('x-api-key')
+@ApiSecurity('Authorization')
 export class ValidationController {
   constructor(
     private readonly validationService: ValidationService,

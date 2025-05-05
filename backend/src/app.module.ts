@@ -76,6 +76,8 @@ import { JwtModule } from '@nestjs/jwt';
         SMS_VERIFICATION: Joi.boolean().default(false).required(),
         SMS_SERVICE: Joi.string().valid('twilio', 'fast2sms').required(),
 
+        TEST_PHONE_NUMBERS: Joi.string().optional(),
+
         // jwt
         // access token
         JWT_SECRET: Joi.string()

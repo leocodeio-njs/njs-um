@@ -8,7 +8,7 @@ export class VerifyMobileDto {
     required: true,
   })
   @IsString()
-  @IsMobilePhone('en-US', { strictMode: false })
+  @IsMobilePhone()
   mobile: string;
 }
 

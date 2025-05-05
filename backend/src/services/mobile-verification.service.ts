@@ -13,10 +13,10 @@ import { RateLimiterService } from './rate-limiter.service';
 export class MobileVerificationService {
   constructor(
     @Inject('SMS_SERVICE') private smsService: SmsService,
-    @Inject('OTP_REPOSITORY') private otpRepository: IOtpPort,
-    private configService: ConfigService,
+    private readonly otpRepository: IOtpPort,
+    private readonly configService: ConfigService,
     private readonly logger: LoggerService,
-    private rateLimiterService: RateLimiterService,
+    private readonly rateLimiterService: RateLimiterService,
     private readonly debugUtil: DebugUtil,
     private readonly correlationService: CorrelationService,
   ) {}

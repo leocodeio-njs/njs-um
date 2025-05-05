@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/leocodeio-njs/njs-um/compare/v1.2.4...v1.2.5) (2025-05-05)
+
+
+### Performance Improvements
+
+* **rest from otp other things are working:** rest from otp other things are working ([c20f5ce](https://github.com/leocodeio-njs/njs-um/commit/c20f5ce2ffc9cc2e7726b5d21a00da153cbd0e64))
+
 ## [1.2.4](https://github.com/leocodeio-njs/njs-um/compare/v1.2.3...v1.2.4) (2025-05-05)
 
 

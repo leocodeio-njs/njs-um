@@ -4,7 +4,7 @@ import { ValidationController } from './presentation/controllers/validation.cont
 import { JwtService } from '@nestjs/jwt';
 
 import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
-import { UserAuthenticationService } from 'src/services/user-authentication.service';
+import { UserAuthenticationService } from 'src/modules/user/application/services/user-authentication.service';
 import { AuthService } from 'src/services/auth.service';
 import { AuthPolicyService } from 'src/services/auth-policy.service';
 import { UserRepositoryAdapter } from '../user/infrastructure/adapters/user.repository';
@@ -14,18 +14,20 @@ import { usersProvider } from '../user/infrastructure/providers/users.provider';
 import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
 import { RateLimiterService } from 'src/services/rate-limiter.service';
 
-import { TokenManagementService } from 'src/services/token-management.service';
-import { SessionManagementService } from 'src/services/session-management.service';
+
+
 import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
 import { ISessionPort } from '../session/domain/ports/session.port';
 import { sessionProvider } from '../session/infrastructure/providers/session.provider';
 
-import { MobileVerificationService } from 'src/services/mobile-verification.service';
+import { MobileVerificationService } from 'src/modules/otp/application/services/mobile-verification.service';
 import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
 import { IOtpPort } from '../otp/domain/ports/otp.port';
 import { otpProvider } from '../otp/infrastructure/providers/session.provider';
 import { IUserPreferencesPort } from '../user/domain/ports/user-preferences.port';
 import { UserPreferencesRepositoryAdapter } from '../user/infrastructure/adapters/user-preferences.repository';
+import { TokenManagementService } from '../session/application/services/token-management.service';
+import { SessionManagementService } from '../session/application/services/session-management.service';
 
 @Module({
   imports: [],

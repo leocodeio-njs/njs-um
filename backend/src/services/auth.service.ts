@@ -11,11 +11,9 @@ import * as crypto from 'crypto';
 import { USER_REPOSITORY, USER_PREFERENCES_REPOSITORY } from './constants';
 
 // Import specialized services
-import { UserAuthenticationService } from './user-authentication.service';
-import { TokenManagementService } from './token-management.service';
-import { SessionManagementService } from './session-management.service';
+import { UserAuthenticationService } from '../modules/user/application/services/user-authentication.service';
 import { TwoFactorAuthService } from './two-factor-auth.service';
-import { MobileVerificationService } from './mobile-verification.service';
+import { MobileVerificationService } from '../modules/otp/application/services/mobile-verification.service';
 import { UserRegistrationService } from '../modules/user/application/services/user-registration.service';
 
 import { AuthPolicyService } from './auth-policy.service';
@@ -37,6 +35,8 @@ import { UserProfileDto } from 'src/modules/user/application/dtos/user-profile.d
 import { RegisterDto } from 'src/modules/user/application/dtos/register.dto';
 import { UpdateDto } from 'src/modules/user/application/dtos/update.dto';
 import { LogoutDto } from 'src/modules/user/application/dtos/logout.dto';
+import { TokenManagementService } from 'src/modules/session/application/services/token-management.service';
+import { SessionManagementService } from 'src/modules/session/application/services/session-management.service';
 
 @Injectable()
 export class AuthService {

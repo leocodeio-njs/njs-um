@@ -8,15 +8,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
-import { TokenPayload } from '../types/token';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
-import { SESSION_REPOSITORY, USER_REPOSITORY } from './constants';
 import { SessionManagementService } from './session-management.service';
-import { AuthPolicyService } from './auth-policy.service';
 import { ISessionPort } from 'src/modules/session/domain/ports/session.port';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { CorrelationService, LoggerService } from '@leocodeio-njs/njs-logging';
 import { IUser } from 'src/modules/user/domain/models/user.model';
+import { AuthPolicyService } from 'src/services/auth-policy.service';
+import { TokenPayload } from 'src/types/token';
 
 interface RefreshTokenPayload {
   sub: string;

@@ -1,13 +1,11 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
-import { TokenManagementService } from './token-management.service';
-import { SessionManagementService } from './session-management.service';
-import { TwoFactorAuthService } from './two-factor-auth.service';
+import { TwoFactorAuthService } from '../../../../services/two-factor-auth.service';
 
 import { CorrelationService, LoggerService } from '@leocodeio-njs/njs-logging';
-import { RateLimiterService } from './rate-limiter.service';
-import { USER_REPOSITORY } from './constants';
+import { RateLimiterService } from '../../../../services/rate-limiter.service';
+import { USER_REPOSITORY } from '../../../../services/constants';
 import {
   DeviceInfoDto,
   LoginDto,
@@ -15,6 +13,8 @@ import {
 import { LogoutDto } from 'src/modules/user/application/dtos/logout.dto';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { IUser } from 'src/modules/user/domain/models/user.model';
+import { TokenManagementService } from 'src/modules/session/application/services/token-management.service';
+import { SessionManagementService } from 'src/modules/session/application/services/session-management.service';
 
 @Injectable()
 export class UserAuthenticationService {

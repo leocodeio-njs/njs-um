@@ -7,11 +7,10 @@ import { AuthService } from 'src/services/auth.service';
 import { usersProvider } from './infrastructure/providers/users.provider';
 import { sessionProvider } from '../session/infrastructure/providers/session.provider';
 import { JwtService } from '@nestjs/jwt';
-import { UserAuthenticationService } from 'src/services/user-authentication.service';
-import { TokenManagementService } from 'src/services/token-management.service';
-import { SessionManagementService } from 'src/services/session-management.service';
+import { UserAuthenticationService } from 'src/modules/user/application/services/user-authentication.service';
+
 import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
-import { MobileVerificationService } from 'src/services/mobile-verification.service';
+import { MobileVerificationService } from 'src/modules/otp/application/services/mobile-verification.service';
 import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
 import { RateLimiterService } from 'src/services/rate-limiter.service';
 import { AuthPolicyService } from 'src/services/auth-policy.service';
@@ -28,6 +27,8 @@ import { JwtStrategy } from 'src/strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { ISessionPort } from '../session/domain/ports/session.port';
 import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
+import { TokenManagementService } from '../session/application/services/token-management.service';
+import { SessionManagementService } from '../session/application/services/session-management.service';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User, UserPreferences])],

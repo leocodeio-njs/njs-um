@@ -4,11 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OtpController } from './presentation/controllers/otp.controller';
 import { AuthService } from 'src/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserAuthenticationService } from 'src/services/user-authentication.service';
-import { TokenManagementService } from 'src/services/token-management.service';
-import { SessionManagementService } from 'src/services/session-management.service';
+import { UserAuthenticationService } from 'src/modules/user/application/services/user-authentication.service';
+
 import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
-import { MobileVerificationService } from 'src/services/mobile-verification.service';
+import { MobileVerificationService } from 'src/modules/otp/application/services/mobile-verification.service';
 import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
 import { RateLimiterService } from 'src/services/rate-limiter.service';
 import { AuthPolicyService } from 'src/services/auth-policy.service';
@@ -23,6 +22,8 @@ import { IOtpPort } from './domain/ports/otp.port';
 import { OTPRepositoryAdaptor } from './infrastructure/adapters/otp.repository';
 import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
 import { ISessionPort } from '../session/domain/ports/session.port';
+import { TokenManagementService } from '../session/application/services/token-management.service';
+import { SessionManagementService } from '../session/application/services/session-management.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OTP])],

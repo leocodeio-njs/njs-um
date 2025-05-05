@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { SESSION_REPOSITORY } from 'src/services/constants';
+import { SESSION_REPOSITORY } from 'src/utils/services/constants';
 import { Session } from '../entities/session.entity';
 
 export const sessionProvider = [

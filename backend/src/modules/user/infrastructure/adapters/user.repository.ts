@@ -6,7 +6,7 @@ import { IUser } from '../../domain/models/user.model';
 import { User } from '../entities/user.entity';
 import { userStatus } from '../../domain/enums/user_status.enum';
 import { AccessLevel } from '../../domain/enums/access-level.enum';
-import { USER_REPOSITORY } from 'src/services/constants';
+import { USER_REPOSITORY } from 'src/utils/services/constants';
 
 @Injectable()
 export class UserRepositoryAdapter implements IUserPort {

@@ -5,7 +5,7 @@ import { LessThan, MoreThan, Repository } from 'typeorm';
 import { Session } from '../entities/session.entity';
 import { ISessionPort } from '../../domain/ports/session.port';
 import { ISession } from '../../domain/models/session.model';
-import { SESSION_REPOSITORY } from 'src/services/constants';
+import { SESSION_REPOSITORY } from 'src/utils/services/constants';
 
 @Injectable()
 export class SessionRepositoryAdapter implements ISessionPort {

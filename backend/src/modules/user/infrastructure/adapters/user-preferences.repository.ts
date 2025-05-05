@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { IUserPreferencesPort } from '../../domain/ports/user-preferences.port';
 import { UserPreferences } from '../entities/user-preferences.entity';
 import { IUserPreferences } from '../../domain/models/user-preferences.model';
-import { USER_PREFERENCES_REPOSITORY } from 'src/services/constants';
+import { USER_PREFERENCES_REPOSITORY } from 'src/utils/services/constants';
 
 @Injectable()
 export class UserPreferencesRepositoryAdapter implements IUserPreferencesPort {

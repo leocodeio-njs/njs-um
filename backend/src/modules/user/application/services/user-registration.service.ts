@@ -8,9 +8,9 @@ import {
   OTP_REPOSITORY,
   USER_PREFERENCES_REPOSITORY,
   USER_REPOSITORY,
-} from '../../../../services/constants';
+} from '../../../../utils/services/constants';
 import * as bcrypt from 'bcryptjs';
-import { AuthPolicyService } from '../../../../services/auth-policy.service';
+import { AuthPolicyService } from '../../../../utils/services/auth-policy.service';
 import { ConfigService } from '@nestjs/config';
 import { RegisterDto } from 'src/modules/user/application/dtos/register.dto';
 import { UserProfileDto } from 'src/modules/user/application/dtos/user-profile.dto';

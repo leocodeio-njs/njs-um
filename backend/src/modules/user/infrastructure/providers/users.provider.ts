@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import {
   USER_PREFERENCES_REPOSITORY,
   USER_REPOSITORY,
-} from 'src/services/constants';
+} from 'src/utils/services/constants';
 
 export const usersProvider = [
   {

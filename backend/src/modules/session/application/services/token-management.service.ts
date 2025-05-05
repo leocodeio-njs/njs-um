@@ -14,8 +14,8 @@ import { ISessionPort } from 'src/modules/session/domain/ports/session.port';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { CorrelationService, LoggerService } from '@leocodeio-njs/njs-logging';
 import { IUser } from 'src/modules/user/domain/models/user.model';
-import { AuthPolicyService } from 'src/services/auth-policy.service';
-import { TokenPayload } from 'src/types/token';
+import { AuthPolicyService } from 'src/utils/services/auth-policy.service';
+import { TokenPayload } from 'src/utils/types/token';
 
 interface RefreshTokenPayload {
   sub: string;

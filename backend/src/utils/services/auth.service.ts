@@ -8,15 +8,9 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
-import { USER_REPOSITORY, USER_PREFERENCES_REPOSITORY } from './constants';
 
 // Import specialized services
-import { UserAuthenticationService } from '../modules/user/application/services/user-authentication.service';
-import { TwoFactorAuthService } from './two-factor-auth.service';
-import { MobileVerificationService } from '../modules/otp/application/services/mobile-verification.service';
-import { UserRegistrationService } from '../modules/user/application/services/user-registration.service';
 
-import { AuthPolicyService } from './auth-policy.service';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import {
   CompleteMobileLoginDto,
@@ -27,9 +21,7 @@ import {
   DebugUtil,
   LoggerService,
 } from '@leocodeio-njs/njs-logging';
-import { IUserPreferences } from 'src/modules/user/domain/models/user-preferences.model';
 import { IUserPreferencesPort } from 'src/modules/user/domain/ports/user-preferences.port';
-import { ISessionPort } from 'src/modules/session/domain/ports/session.port';
 import { LoginDto } from 'src/modules/user/application/dtos/login.dto';
 import { UserProfileDto } from 'src/modules/user/application/dtos/user-profile.dto';
 import { RegisterDto } from 'src/modules/user/application/dtos/register.dto';
@@ -37,6 +29,10 @@ import { UpdateDto } from 'src/modules/user/application/dtos/update.dto';
 import { LogoutDto } from 'src/modules/user/application/dtos/logout.dto';
 import { TokenManagementService } from 'src/modules/session/application/services/token-management.service';
 import { SessionManagementService } from 'src/modules/session/application/services/session-management.service';
+import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
+import { MobileVerificationService } from 'src/modules/otp/application/services/mobile-verification.service';
+import { TwoFactorAuthService } from 'src/utils/services/two-factor-auth.service';
+import { UserAuthenticationService } from 'src/modules/user/application/services/user-authentication.service';
 
 @Injectable()
 export class AuthService {
@@ -49,7 +45,8 @@ export class AuthService {
     private readonly correlationService: CorrelationService,
 
     // Inject specialized services
-    private readonly userAuthService: UserAuthenticationService,
+    private readonly userAuthService: UserAuthenticationService
+    ,
     private readonly tokenService: TokenManagementService,
     private readonly sessionService: SessionManagementService,
     private readonly twoFactorService: TwoFactorAuthService,

@@ -13,7 +13,7 @@ import {
   VerifyMobileConfirmDto,
   VerifyMobileDto,
 } from 'src/modules/validation/application/dtos/verify-mobile.dto';
-import { AuthService } from 'src/services/auth.service';
+import { AuthService } from 'src/utils/services/auth.service';
 
 @UseGuards(IpRateLimitGuard)
 @ApiSecurity('x-api-key')

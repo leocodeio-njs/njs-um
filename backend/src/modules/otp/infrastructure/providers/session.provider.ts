@@ -3,7 +3,7 @@ import {
   AvailableSmsServices,
   OTP_REPOSITORY,
   SMS_SERVICE,
-} from 'src/services/constants';
+} from 'src/utils/services/constants';
 import { OTP } from '../entities/otp.entity';
 import { ConfigService } from '@nestjs/config';
 import { TwilioSmsService } from 'src/modules/otp/application/services/twilio.service';

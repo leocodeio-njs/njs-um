@@ -7,7 +7,7 @@ import {
   DebugUtil,
   LoggerService,
 } from '@leocodeio-njs/njs-logging';
-import { RateLimiterService } from '../../../../services/rate-limiter.service';
+import { RateLimiterService } from '../../../../utils/services/rate-limiter.service';
 
 @Injectable()
 export class MobileVerificationService {

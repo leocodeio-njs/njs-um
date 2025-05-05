@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/leocodeio-njs/njs-um/compare/v1.2.9...v1.3.0) (2025-05-05)
+
+
+### Features
+
+* **implemented mail sms:** implemented mail sms ([0cf9607](https://github.com/leocodeio-njs/njs-um/commit/0cf9607e768e4b21cf91a81b3ac41ff740395c9a))
+
 ## [1.2.9](https://github.com/leocodeio-njs/njs-um/compare/v1.2.8...v1.2.9) (2025-05-05)
 
 

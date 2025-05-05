@@ -72,7 +72,10 @@ export class TokenManagementService {
       sessionId: sessionId,
     };
 
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      expiresIn: this.configService.get('JWT_EXPIRES_IN') || '1h',
+      secret: this.configService.get('JWT_SECRET') || 'default-secret',
+    });
   }
 
   /**

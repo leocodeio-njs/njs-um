@@ -21,7 +21,8 @@ import { ValidationModule } from './modules/validation/validation.module';
 import { UserModule } from './modules/user/user-auth.module';
 import { OtpModule } from './modules/otp/otp.module';
 import { SessionModule } from './modules/session/session.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -74,6 +75,19 @@ import { ConfigModule } from '@nestjs/config';
         // otp
         SMS_VERIFICATION: Joi.boolean().default(false).required(),
         SMS_SERVICE: Joi.string().valid('twilio', 'fast2sms').required(),
+
+        // jwt
+        // access token
+        JWT_SECRET: Joi.string()
+          .default('this-is-access-token-secret')
+          .required(),
+        JWT_EXPIRES_IN: Joi.string().default('30m').required(),
+
+        // refresh token
+        JWT_REFRESH_SECRET: Joi.string()
+          .default('this-is-refresh-token-secret')
+          .required(),
+        JWT_REFRESH_EXPIRES_IN: Joi.string().default('7d').required(),
       }),
     }),
     AppConfigModule,
@@ -105,6 +119,17 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     SessionModule,
     OtpModule,
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get('JWT_EXPIRES_IN') || '15m',
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [

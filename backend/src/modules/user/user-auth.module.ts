@@ -23,9 +23,14 @@ import { UserPreferencesRepositoryAdapter } from './infrastructure/adapters/user
 import { IUserPreferencesPort } from './domain/ports/user-preferences.port';
 import { IOtpPort } from '../otp/domain/ports/otp.port';
 import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
+import { LocalStrategy } from 'src/strategies/local.strategy';
+import { JwtStrategy } from 'src/strategies/jwt.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { ISessionPort } from '../session/domain/ports/session.port';
+import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserPreferences])],
+  imports: [PassportModule, TypeOrmModule.forFeature([User, UserPreferences])],
   controllers: [UserAuthController],
   providers: [
     AuthService,
@@ -50,9 +55,17 @@ import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.reposit
       provide: IOtpPort,
       useClass: OTPRepositoryAdaptor,
     },
+    {
+      provide: ISessionPort,
+      useClass: SessionRepositoryAdapter,
+    },
     ...usersProvider,
     ...sessionProvider,
     ...otpProvider,
+
+    // passport js
+    LocalStrategy,
+    JwtStrategy,
   ],
 })
 export class UserModule {}

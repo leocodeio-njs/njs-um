@@ -19,10 +19,10 @@ import { IUser } from 'src/modules/user/domain/models/user.model';
 @Injectable()
 export class UserAuthenticationService {
   constructor(
-    @Inject(USER_REPOSITORY) private userRepository: IUserPort,
-    private tokenManagementService: TokenManagementService,
-    private sessionManagementService: SessionManagementService,
-    private twoFactorAuthService: TwoFactorAuthService,
+    private readonly userRepository: IUserPort,
+    private readonly tokenManagementService: TokenManagementService,
+    private readonly sessionManagementService: SessionManagementService,
+    private readonly twoFactorAuthService: TwoFactorAuthService,
     private readonly logger: LoggerService,
     private readonly rateLimiterService: RateLimiterService,
     private readonly correlationService: CorrelationService,

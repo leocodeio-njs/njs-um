@@ -7,7 +7,7 @@ import { ISession } from 'src/modules/session/domain/models/session.model';
 @Injectable()
 export class SessionManagementService {
   constructor(
-    @Inject('SESSION_REPOSITORY') private sessionRepository: ISessionPort,
+    private readonly sessionRepository: ISessionPort,
     private readonly logger: LoggerService,
     private readonly correlationService: CorrelationService,
   ) {

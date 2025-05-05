@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/leocodeio-njs/njs-um/compare/v1.2.3...v1.2.4) (2025-05-05)
+
+
+### Performance Improvements
+
+* **login with password done:** login with password done ([9f14f5f](https://github.com/leocodeio-njs/njs-um/commit/9f14f5fec306d5a403b1da37a5d77c0d5ad18bc6))
+
 ## [1.2.3](https://github.com/leocodeio-njs/njs-um/compare/v1.2.2...v1.2.3) (2025-05-05)
 
 

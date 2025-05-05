@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/leocodeio-njs/njs-um/compare/v1.2.5...v1.2.6) (2025-05-05)
+
+
+### Performance Improvements
+
+* **mobile otp and mobile verify is done:** mobile otp and mobile verify is done ([af36ba1](https://github.com/leocodeio-njs/njs-um/commit/af36ba132fc0181beab1ffa49c9d04eea3bce7a6))
+
 ## [1.2.5](https://github.com/leocodeio-njs/njs-um/compare/v1.2.4...v1.2.5) (2025-05-05)
 
 

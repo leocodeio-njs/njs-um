@@ -70,6 +70,9 @@ import { ConfigModule } from '@nestjs/config';
         REFRESH_TOKEN_SECRET: Joi.string()
           .default('refresh-token-secret')
           .required(),
+
+        // otp
+        SMS_SERVICE: Joi.string().valid('twilio', 'fast2sms').required(),
       }),
     }),
     AppConfigModule,
@@ -79,7 +82,7 @@ import { ConfigModule } from '@nestjs/config';
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => ({
         ...configService.databaseConfig,
-        entities: [__dirname + '/**/*.schema{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/database/migrations/**/*{.ts,.js}'],
         migrationsRun: true,
         synchronize: true,

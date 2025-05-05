@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { IOtp } from './../../domain/models/otp.model';
 import { OTP } from '../entities/otp.entity';
 import { IOtpPort } from '../../domain/ports/otp.port';
+import { OTP_REPOSITORY } from 'src/services/constants';
 
 @Injectable()
 export class OTPRepositoryAdaptor implements IOtpPort {
   constructor(
-    @InjectRepository(OTP)
+    @Inject(OTP_REPOSITORY)
     private repository: Repository<OTP>,
   ) {}
 

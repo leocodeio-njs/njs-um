@@ -14,16 +14,15 @@ import { IsEmailValidDto } from '../../application/dtos/is-email-valid.dto';
 import { ExistsPhoneDto } from '../../application/dtos/exists-phone.dto';
 import { ExistsEmailDto } from '../../application/dtos/exists-email.dto';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiSecurity } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { AuthExceptionFilter } from 'src/filters/auth-exceptions.filter';
 import { ValidateTokenDto } from '../../application/dtos/validate-token.dto';
 import { AuthService } from 'src/services/auth.service';
 import { Request } from 'express';
-import { RefreshTokenDto } from '../../application/dtos/refresh-token.dto';
 
 @Controller('validate')
-// @ApiSecurity('x-api-key')
+@ApiSecurity('x-api-key')
 export class ValidationController {
   constructor(
     private readonly validationService: ValidationService,
@@ -85,12 +84,5 @@ export class ValidationController {
       userId: req.user.id,
       channel: validateTokenDto.channel,
     };
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh your access token' })
-  @Post('refresh')
-  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshAccessToken(refreshTokenDto.refreshToken);
   }
 }

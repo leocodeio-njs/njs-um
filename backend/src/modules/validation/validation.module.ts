@@ -1,30 +1,29 @@
 import { Module } from '@nestjs/common';
-import { ValidationController } from './presentation/controllers/validation.controller';
 import { ValidationService } from './application/services/validation.service';
-import { usersProvider } from '../user/infrastructure/providers/users.provider';
-import { IUserPort } from '../user/domain/ports/user.port';
-import { UserRepositoryAdapter } from '../user/infrastructure/adapters/user.repository';
-import { AuthService } from 'src/services/auth.service';
-import { sessionProvider } from '../session/infrastructure/providers/session.provider';
-
-import { ISessionPort } from '../session/domain/ports/session.port';
-import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
+import { ValidationController } from './presentation/controllers/validation.controller';
 import { JwtService } from '@nestjs/jwt';
+
+import { UserRegistrationService } from 'src/services/user-registration.service';
 import { UserAuthenticationService } from 'src/services/user-authentication.service';
+import { AuthService } from 'src/services/auth.service';
+import { AuthPolicyService } from 'src/services/auth-policy.service';
+import { UserRepositoryAdapter } from '../user/infrastructure/adapters/user.repository';
+import { IUserPort } from '../user/domain/ports/user.port';
+import { usersProvider } from '../user/infrastructure/providers/users.provider';
+
+import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
+import { RateLimiterService } from 'src/services/rate-limiter.service';
+
 import { TokenManagementService } from 'src/services/token-management.service';
 import { SessionManagementService } from 'src/services/session-management.service';
-import { TwoFactorAuthService } from 'src/services/two-factor-auth.service';
-import { MobileVerificationService } from 'src/services/mobile-verification.service';
-import { UserRegistrationService } from 'src/services/user-registration.service';
-import { RateLimiterService } from 'src/services/rate-limiter.service';
-import { AuthPolicyService } from 'src/services/auth-policy.service';
-import { otpProvider } from '../otp/infrastructure/providers/session.provider';
-import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
-import { AvailableSmsServices, OTP_REPOSITORY } from 'src/services/constants';
-import { TwilioSmsService } from 'src/services/twilio.service';
-import { ConfigService } from '@nestjs/config';
+import { SessionRepositoryAdapter } from '../session/infrastructure/adapters/session.repository';
+import { ISessionPort } from '../session/domain/ports/session.port';
+import { sessionProvider } from '../session/infrastructure/providers/session.provider';
 
-const configService = new ConfigService();
+import { MobileVerificationService } from 'src/services/mobile-verification.service';
+import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
+import { IOtpPort } from '../otp/domain/ports/otp.port';
+import { otpProvider } from '../otp/infrastructure/providers/session.provider';
 
 @Module({
   imports: [],
@@ -50,14 +49,8 @@ const configService = new ConfigService();
       useClass: SessionRepositoryAdapter,
     },
     {
-      provide: OTP_REPOSITORY,
+      provide: IOtpPort,
       useClass: OTPRepositoryAdaptor,
-    },
-    {
-      provide: 'SMS_SERVICE',
-      useClass:
-        AvailableSmsServices[configService.get('SMS_SERVICE')] ||
-        TwilioSmsService,
     },
     ...usersProvider,
     ...sessionProvider,

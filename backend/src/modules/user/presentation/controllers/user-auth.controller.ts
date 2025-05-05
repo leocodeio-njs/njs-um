@@ -30,6 +30,7 @@ import { IsUserExistsDto } from '../../application/dtos/is-user-exists.dto';
 
 @UseGuards(IpRateLimitGuard)
 @ApiSecurity('x-api-key')
+@ApiSecurity('Authorization')
 @Controller('user')
 export class UserAuthController {
   constructor(private authService: AuthService) {}

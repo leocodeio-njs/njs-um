@@ -8,7 +8,7 @@ import { TokenPayload } from 'src/types/token';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject('SESSION_REPOSITORY') private sessionRepository: ISessionPort,
+    private readonly sessionRepository: ISessionPort,
     configService: ConfigService,
   ) {
     super({

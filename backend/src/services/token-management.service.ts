@@ -31,10 +31,9 @@ export class TokenManagementService {
   private refreshTokenLimiter: RateLimiterMemory;
 
   constructor(
-    @Inject(USER_REPOSITORY) private userRepository: IUserPort,
-    @Inject(SESSION_REPOSITORY) private sessionRepository: ISessionPort,
-    private jwtService: JwtService,
-    private configService: ConfigService,
+    private readonly userRepository: IUserPort,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
     private readonly logger: LoggerService,
     private readonly correlationService: CorrelationService,
     private readonly sessionService: SessionManagementService,

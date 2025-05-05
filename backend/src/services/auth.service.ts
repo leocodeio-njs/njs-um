@@ -41,14 +41,11 @@ import { LogoutDto } from 'src/modules/user/application/dtos/logout.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(USER_REPOSITORY) private userPort: IUserPort,
-    @Inject(USER_PREFERENCES_REPOSITORY)
-    private userPreferencesRepository: IUserPreferencesPort,
-    @Inject('SESSION_REPOSITORY') private sessionRepository: ISessionPort,
-    private jwtService: JwtService,
-    private configService: ConfigService,
+    private readonly userPort: IUserPort,
+    private readonly userPreferencesRepository: IUserPreferencesPort,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
     private readonly logger: LoggerService,
-    private readonly debugUtil: DebugUtil,
     private readonly correlationService: CorrelationService,
 
     // Inject specialized services

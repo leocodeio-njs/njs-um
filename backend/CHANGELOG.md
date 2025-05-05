@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/leocodeio-njs/njs-um/compare/v1.2.0...v1.2.1) (2025-05-05)
+
+
+### Performance Improvements
+
+* **added all endpoints:** added all endpoints ([a50340b](https://github.com/leocodeio-njs/njs-um/commit/a50340b7b6a53def6724977c323583df222f6ec0))
+* **added implemetation for accesstoken validation:** added implemetation for accesstoken validation ([6570936](https://github.com/leocodeio-njs/njs-um/commit/6570936295665e77c926aca960280149d29e30b9))
+
 ## [1.2.1](https://github.com/leocodeio-njs/njs-um/compare/v1.2.0...v1.2.1) (2025-05-04)
 
 

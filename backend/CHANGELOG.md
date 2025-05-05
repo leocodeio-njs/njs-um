@@ -1,3 +1,5 @@
+## [1.2.7](https://github.com/leocodeio-njs/njs-um/compare/v1.2.6...v1.2.7) (2025-05-05)
+
 ## [1.2.6](https://github.com/leocodeio-njs/njs-um/compare/v1.2.5...v1.2.6) (2025-05-05)
 
 

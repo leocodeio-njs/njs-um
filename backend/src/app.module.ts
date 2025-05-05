@@ -72,6 +72,7 @@ import { ConfigModule } from '@nestjs/config';
           .required(),
 
         // otp
+        SMS_VERIFICATION: Joi.boolean().default(false).required(),
         SMS_SERVICE: Joi.string().valid('twilio', 'fast2sms').required(),
       }),
     }),

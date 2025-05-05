@@ -38,7 +38,6 @@ export class UserAuthController {
   @ApiOperation({ summary: 'User register' })
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    // register the user
     return await this.authService.register(registerDto);
   }
 

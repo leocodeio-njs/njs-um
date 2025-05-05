@@ -11,6 +11,9 @@ import { IUser } from 'src/modules/user/domain/models/user.model';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { IUserPreferencesPort } from 'src/modules/user/domain/ports/user-preferences.port';
 import { IOtpPort } from 'src/modules/otp/domain/ports/otp.port';
+import { DataSource } from 'typeorm';
+import { UserPreferences } from 'src/modules/user/infrastructure/entities/user-preferences.entity';
+import { User } from 'src/modules/user/infrastructure/entities/user.entity';
 
 @Injectable()
 export class UserRegistrationService {
@@ -21,75 +24,111 @@ export class UserRegistrationService {
     @Inject('OTP_REPOSITORY') private otpRepository: IOtpPort,
     private readonly authPolicyService: AuthPolicyService,
     private readonly configService: ConfigService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async register(dto: RegisterDto): Promise<UserProfileDto> {
-    // Verify mobile OTP only for mobile channel
-    if (
-      this.configService.get('SMS_VERIFICATION') === 'true' &&
-      (dto.channel === 'mobile' || dto.channel === 'web')
-    ) {
-      const isValidOTP = await this.otpRepository.verify(
-        dto.mobile,
-        dto.mobileVerificationCode as string,
-      );
-      if (!isValidOTP) {
-        throw new UnauthorizedException('Invalid mobile verification code');
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const manager = queryRunner.manager;
+    try {
+      // Verify mobile OTP only for mobile channel
+      if (
+        this.configService.get<boolean>('SMS_VERIFICATION') &&
+        (dto.channel === 'mobile' || dto.channel === 'web')
+      ) {
+        const isValidOTP = await this.otpRepository.verify(
+          dto.mobile,
+          dto.mobileVerificationCode as string,
+        );
+        if (!isValidOTP) {
+          throw new UnauthorizedException('Invalid mobile verification code');
+        }
       }
+
+      // Hash password
+      const passwordHash = await this.hashPassword(dto.password);
+
+      // Determine access level
+      const accessLevel = this.authPolicyService.determineUserAccessLevel({
+        email: dto.email,
+        mobile: dto.mobile,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        profilePicUrl: dto.profilePicUrl,
+        passwordHash,
+        status: userStatus.ACTIVE,
+        allowedChannels: ['mobile', 'web'],
+        twoFactorEnabled: false,
+      } as IUser);
+
+      // const user = await this.userRepository.save({
+      //   email: dto.email,
+      //   mobile: dto.mobile,
+      //   firstName: dto.firstName,
+      //   lastName: dto.lastName,
+      //   profilePicUrl: dto.profilePicUrl,
+      //   passwordHash,
+      //   status: userStatus.ACTIVE,
+      //   allowedChannels: ['mobile', 'web'],
+      //   accessLevel: accessLevel,
+      //   twoFactorEnabled: false,
+      // });
+
+      // save user to the database
+      const user = await manager.save(User, {
+        email: dto.email,
+        mobile: dto.mobile,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        profilePicUrl: dto.profilePicUrl,
+        passwordHash,
+        status: userStatus.ACTIVE,
+        allowedChannels: ['mobile', 'web'],
+        accessLevel: accessLevel,
+        twoFactorEnabled: false,
+      });
+
+      // const userPreferences = await this.userPreferencesRepository.save({
+      //   userId: user.id,
+      //   language: dto.language,
+      //   theme: dto.theme,
+      //   timeZone: dto.timeZone,
+      // });
+
+      // save user preferences to the database
+      const userPreferences = await manager.save(UserPreferences, {
+        userId: user.id,
+        language: dto.language,
+        theme: dto.theme,
+        timeZone: dto.timeZone,
+      });
+      if (!userPreferences) {
+        throw new UnauthorizedException('User preferences not found');
+      }
+
+      return {
+        id: user.id,
+        email: user.email,
+        mobile: user.mobile,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profilePicUrl: user.profilePicUrl as string,
+        language: userPreferences.language!,
+        theme: userPreferences.theme!,
+        timeZone: userPreferences.timeZone!,
+        accessLevel: user.accessLevel,
+        twoFactorEnabled: user.twoFactorEnabled,
+        allowedChannels: user.allowedChannels,
+        createdAt: user.createdAt,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    // Hash password
-    const passwordHash = await this.hashPassword(dto.password);
-
-    // Determine access level
-    const accessLevel = this.authPolicyService.determineUserAccessLevel({
-      email: dto.email,
-      mobile: dto.mobile,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      profilePicUrl: dto.profilePicUrl,
-      passwordHash,
-      status: userStatus.ACTIVE,
-      allowedChannels: [dto.channel],
-      twoFactorEnabled: false,
-    } as IUser);
-    console.log('accessLevel', accessLevel);
-
-    const user = await this.userRepository.save({
-      email: dto.email,
-      mobile: dto.mobile,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      profilePicUrl: dto.profilePicUrl,
-      passwordHash,
-      status: userStatus.ACTIVE,
-      allowedChannels: [dto.channel],
-      accessLevel,
-      twoFactorEnabled: false,
-    });
-
-    const userPreferences = await this.userPreferencesRepository.save({
-      userId: user.id,
-      language: dto.language,
-      theme: dto.theme,
-      timeZone: dto.timeZone,
-    });
-
-    return {
-      id: user.id,
-      email: user.email,
-      mobile: user.mobile,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      profilePicUrl: user.profilePicUrl as string,
-      language: userPreferences.language,
-      theme: userPreferences.theme,
-      timeZone: userPreferences.timeZone,
-      accessLevel: user.accessLevel,
-      twoFactorEnabled: user.twoFactorEnabled,
-      allowedChannels: user.allowedChannels,
-      createdAt: user.createdAt,
-    };
   }
 
   async update(dto: UpdateDto, id: string): Promise<UserProfileDto> {

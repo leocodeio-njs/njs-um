@@ -83,14 +83,8 @@ export class AuthService {
     return this.userAuthService.login(user, loginDto);
   }
 
-  // Registration
+  // create new user
   async register(dto: RegisterDto): Promise<UserProfileDto> {
-    this.logger.debug('Processing registration request', {
-      email: dto.email,
-      channel: dto.channel,
-      correlationId: this.correlationService.getCorrelationId(),
-    });
-
     return this.userRegistrationService.register(dto);
   }
 

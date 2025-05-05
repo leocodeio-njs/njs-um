@@ -13,7 +13,7 @@ import {
 export class RegisterDto {
   @ApiProperty({
     description: 'User email address',
-    example: 'user@example.com',
+    example: 'harsha@gmail.com',
     required: true,
   })
   @IsEmail()
@@ -21,7 +21,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'User mobile number',
-    example: '12543008333',
+    example: '+919603028848',
     required: true,
   })
   @IsString()
@@ -32,7 +32,7 @@ export class RegisterDto {
   @ApiProperty({
     description:
       'User password - must be at least 12 characters and contain uppercase, lowercase, number, special character',
-    example: 'SecurePass123!',
+    example: 'basic@9897N',
     required: true,
     minLength: 8,
   })
@@ -68,7 +68,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'User First name',
-    example: 'John',
+    example: 'Harsha',
     required: true,
   })
   @IsString()
@@ -76,7 +76,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'User Last name',
-    example: 'Doe',
+    example: 'Leo',
     required: true,
   })
   @IsString()
@@ -84,7 +84,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'User Profile Picture URL',
-    example: 'https://example.com/profile.jpg',
+    example: 'https://github.com/shadcn.png',
     required: false,
   })
   // @IsUrl()

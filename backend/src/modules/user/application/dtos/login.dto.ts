@@ -9,7 +9,7 @@ export interface DeviceInfoDto {
 export class LoginDto implements DeviceInfoDto {
   @ApiProperty({
     description: 'User identifier (email or mobile)',
-    example: 'user@example.com or +1234567890',
+    example: 'harsha@gmail.com or +919603028848',
     required: true,
   })
   @IsString()
@@ -17,7 +17,7 @@ export class LoginDto implements DeviceInfoDto {
 
   @ApiProperty({
     description: 'User password',
-    example: 'Password123!',
+    example: 'basic@9897N',
     required: true,
   })
   @IsString()

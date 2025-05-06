@@ -30,6 +30,8 @@ import { TokenManagementService } from '../session/application/services/token-ma
 import { SessionManagementService } from '../session/application/services/session-management.service';
 import { JwtStrategy } from 'src/utils/strategies/jwt.strategy';
 import { LocalStrategy } from 'src/utils/strategies/local.strategy';
+import { EmailjsMailerService } from '../otp/application/services/emailjs-mailer.service';
+import { OtpService } from '../otp/application/services/otp.service';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User, UserPreferences])],
@@ -45,6 +47,8 @@ import { LocalStrategy } from 'src/utils/strategies/local.strategy';
     UserRegistrationService,
     RateLimiterService,
     AuthPolicyService,
+    EmailjsMailerService,
+    OtpService,
     {
       provide: IUserPort,
       useClass: UserRepositoryAdapter,

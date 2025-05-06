@@ -27,6 +27,10 @@ import {
   InitiateMobileLoginDto,
 } from '../../application/dtos/mobile-login.dto';
 import { IsUserExistsDto } from '../../application/dtos/is-user-exists.dto';
+import {
+  CompleteMailLoginDto,
+  InitiateMailLoginDto,
+} from '../../application/dtos/mail-login.dto';
 
 @UseGuards(IpRateLimitGuard)
 @ApiSecurity('x-api-key')
@@ -100,6 +104,20 @@ export class UserAuthController {
   @HttpCode(HttpStatus.OK)
   async completeMobileLogin(@Body() dto: CompleteMobileLoginDto) {
     return this.authService.completeMobileLogin(dto);
+  }
+
+  @ApiOperation({ summary: 'Initiate mobile login' })
+  @Post('mail/login')
+  @HttpCode(HttpStatus.OK)
+  async initiateMailLogin(@Body() dto: InitiateMailLoginDto) {
+    return this.authService.initiateMailLogin(dto);
+  }
+
+  @ApiOperation({ summary: 'Verify mail login' })
+  @Post('mail/login/verify')
+  @HttpCode(HttpStatus.OK)
+  async completeMailLogin(@Body() dto: CompleteMailLoginDto) {
+    return this.authService.completeMailLogin(dto);
   }
 
   @ApiOperation({ summary: 'Is user exists' })

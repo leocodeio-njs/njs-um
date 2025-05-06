@@ -26,6 +26,8 @@ import { IUserPreferencesPort } from '../user/domain/ports/user-preferences.port
 import { UserPreferencesRepositoryAdapter } from '../user/infrastructure/adapters/user-preferences.repository';
 import { TokenManagementService } from '../session/application/services/token-management.service';
 import { SessionManagementService } from '../session/application/services/session-management.service';
+import { OtpService } from '../otp/application/services/otp.service';
+import { EmailjsMailerService } from '../otp/application/services/emailjs-mailer.service';
 
 @Module({
   imports: [],
@@ -42,6 +44,8 @@ import { SessionManagementService } from '../session/application/services/sessio
     UserRegistrationService,
     RateLimiterService,
     AuthPolicyService,
+    EmailjsMailerService,
+    OtpService,
     {
       provide: IUserPort,
       useClass: UserRepositoryAdapter,

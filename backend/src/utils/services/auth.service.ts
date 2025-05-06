@@ -33,6 +33,12 @@ import { UserRegistrationService } from 'src/modules/user/application/services/u
 import { MobileVerificationService } from 'src/modules/otp/application/services/mobile-verification.service';
 import { TwoFactorAuthService } from 'src/utils/services/two-factor-auth.service';
 import { UserAuthenticationService } from 'src/modules/user/application/services/user-authentication.service';
+import {
+  CompleteMailLoginDto,
+  InitiateMailLoginDto,
+} from 'src/modules/user/application/dtos/mail-login.dto';
+import { OtpService } from 'src/modules/otp/application/services/otp.service';
+import { EmailjsMailerService } from 'src/modules/otp/application/services/emailjs-mailer.service';
 
 @Injectable()
 export class AuthService {
@@ -45,13 +51,16 @@ export class AuthService {
     private readonly correlationService: CorrelationService,
 
     // Inject specialized services
-    private readonly userAuthService: UserAuthenticationService
-    ,
+    private readonly userAuthService: UserAuthenticationService,
     private readonly tokenService: TokenManagementService,
     private readonly sessionService: SessionManagementService,
     private readonly twoFactorService: TwoFactorAuthService,
     private readonly mobileVerificationService: MobileVerificationService,
     private readonly userRegistrationService: UserRegistrationService,
+
+    // mail otp
+    private readonly otpService: OtpService,
+    private readonly emailjsMailerService: EmailjsMailerService,
   ) {
     this.logger.setLogContext('AuthService');
   }
@@ -291,6 +300,102 @@ export class AuthService {
     );
     if (!isValid) {
       throw new UnauthorizedException('Invalid OTP');
+    }
+
+    // Create session and tokens
+    const sessionId = crypto.randomUUID();
+    const tokenFamily = crypto.randomUUID();
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.tokenService.generateAccessToken(user, sessionId, dto.channel),
+      this.tokenService.generateRefreshToken(user.id, sessionId, tokenFamily),
+    ]);
+
+    // Create session
+    await this.sessionService.createSession({
+      id: sessionId,
+      userId: user.id,
+      deviceInfo: `${dto.channel}${dto.userAgent ? ` - ${dto.userAgent}` : ''}`,
+      channel: dto.channel,
+      refreshTokenFamily: tokenFamily,
+      userAgent: dto.userAgent,
+      metadata: {
+        loginMethod: 'mobile_otp',
+      },
+    });
+
+    // Update user's last login
+    await this.userPort.update(user.id, {
+      lastLoginAt: new Date(),
+    });
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      sessionId,
+    };
+  }
+
+  // mail login initialization
+  async initiateMailLogin(
+    dto: InitiateMailLoginDto,
+  ): Promise<{ reference: string }> {
+    this.logger.debug('Initiating mail login', {
+      mail: dto.mail,
+      channel: dto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    // Check if user exists first
+    const user = await this.userPort.findByIdentifier(dto.mail);
+    if (!user) {
+      throw new UnauthorizedException(
+        'Please register before attempting to login. Registration requires both email and mobile number.',
+      );
+    }
+    // Generate OTP using the new service
+    const otp = this.otpService.generateToken(
+      dto.mail,
+      this.configService.get('TOPT_SECRET') || 'default-salt',
+    );
+
+    // Send the OTP via email
+    await this.emailjsMailerService.sendOtpMail(dto.mail, dto.name, otp);
+    return { reference: 'email is sent' };
+  }
+  // complete mail login
+  async completeMailLogin(dto: CompleteMailLoginDto): Promise<{
+    access_token: string;
+    refresh_token: string;
+    sessionId: string;
+  }> {
+    this.logger.debug('Completing mail login', {
+      mail: dto.mail,
+      channel: dto.channel,
+      correlationId: this.correlationService.getCorrelationId(),
+    });
+
+    // Verify user exists with complete profile
+    const user = await this.userPort.findByIdentifier(dto.mail);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.email || !user.mobile) {
+      throw new UnauthorizedException(
+        'Incomplete registration. Please complete registration with both email and mobile number.',
+      );
+    }
+
+    // Verify OTP using the new service
+    const isValid = this.otpService.verifyToken(
+      dto.mail,
+      this.configService.get('TOPT_SECRET') || 'default-salt',
+      dto.otp,
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid verification code');
     }
 
     // Create session and tokens

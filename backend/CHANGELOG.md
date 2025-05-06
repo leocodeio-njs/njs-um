@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/leocodeio-njs/njs-um/compare/v1.4.2...v1.5.0) (2025-05-06)
+
+
+### Features
+
+* **file structure:** file structure ([8812c5f](https://github.com/leocodeio-njs/njs-um/commit/8812c5feaad67eff3647fa073a275e4a71803ff1))
+
 ## [1.4.2](https://github.com/leocodeio-njs/njs-um/compare/v1.4.1...v1.4.2) (2025-05-06)
 
 

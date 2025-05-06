@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/leocodeio-njs/njs-um/compare/v1.4.1...v1.4.2) (2025-05-06)
+
+
+### Performance Improvements
+
+* **mail verf done:** mail verf done ([9f6d86b](https://github.com/leocodeio-njs/njs-um/commit/9f6d86bfedf8b1c7cd722c7a3956aa794359ff7f))
+
 ## [1.4.1](https://github.com/leocodeio-njs/njs-um/compare/v1.4.0...v1.4.1) (2025-05-06)
 
 

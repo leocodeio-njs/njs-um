@@ -20,6 +20,7 @@ import { IUser } from 'src/modules/user/domain/models/user.model';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { IUserPreferencesPort } from 'src/modules/user/domain/ports/user-preferences.port';
 import { IOtpPort } from 'src/modules/otp/domain/ports/otp.port';
+import { OtpService } from 'src/modules/otp/application/services/otp.service';
 @Injectable()
 export class UserRegistrationService {
   constructor(
@@ -28,6 +29,7 @@ export class UserRegistrationService {
     private readonly otpPort: IOtpPort,
     private readonly authPolicyService: AuthPolicyService,
     private readonly configService: ConfigService,
+    private readonly otpService: OtpService,
   ) {}
 
   async register(dto: RegisterDto): Promise<UserProfileDto> {
@@ -40,17 +42,34 @@ export class UserRegistrationService {
     if (mobileUsed) {
       throw new ConflictException('Mobile number is already in use');
     }
-    // Verify mobile OTP only for mobile channel
+    // MOBILE_VERIFICATION
     if (
-      this.configService.get<boolean>('SMS_VERIFICATION') &&
+      this.configService.get<boolean>('MOBILE_VERIFICATION') &&
       (dto.channel === 'mobile' || dto.channel === 'web')
     ) {
       const isValidOTP = await this.otpPort.verify(
         dto.mobile,
-        dto.mobileVerificationCode as string,
+        dto.mobileVerificationCode!,
       );
+      console.log('isValidOTP', isValidOTP);
       if (!isValidOTP) {
         throw new UnauthorizedException('Invalid mobile verification code');
+      }
+    }
+
+    // EMAIL_VERIFICATION
+    if (
+      this.configService.get<boolean>('MAIL_VERIFICATION') &&
+      (dto.channel === 'email' || dto.channel === 'web')
+    ) {
+      const isValid = this.otpService.verifyToken(
+        dto.email,
+        this.configService.get('TOPT_SECRET') || 'default-salt',
+        dto.mailVerificationCode!,
+      );
+      console.log('isValid', isValid);
+      if (!isValid) {
+        throw new UnauthorizedException('Invalid email verification code');
       }
     }
 

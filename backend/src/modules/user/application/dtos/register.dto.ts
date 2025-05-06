@@ -67,6 +67,15 @@ export class RegisterDto {
   mobileVerificationCode?: string;
 
   @ApiProperty({
+    description: 'Mobile verification code',
+    example: '123456',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  mailVerificationCode?: string;
+
+  @ApiProperty({
     description: 'User First name',
     example: 'Harsha',
     required: true,

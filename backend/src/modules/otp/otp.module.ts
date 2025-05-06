@@ -63,5 +63,18 @@ import { OtpService } from './application/services/otp.service';
     ...sessionProvider,
     ...otpProvider,
   ],
+  exports: [
+    IOtpPort,
+    UserAuthenticationService,
+    TokenManagementService,
+    SessionManagementService,
+    TwoFactorAuthService,
+    MobileVerificationService,
+    UserRegistrationService,
+    RateLimiterService,
+    AuthPolicyService,
+    EmailjsMailerService,
+    OtpService,
+  ],
 })
 export class OtpModule {}

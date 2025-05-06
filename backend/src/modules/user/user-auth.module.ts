@@ -14,14 +14,11 @@ import { MobileVerificationService } from 'src/modules/otp/application/services/
 import { UserRegistrationService } from 'src/modules/user/application/services/user-registration.service';
 import { RateLimiterService } from 'src/utils/services/rate-limiter.service';
 import { AuthPolicyService } from 'src/utils/services/auth-policy.service';
-import { otpProvider } from '../otp/infrastructure/providers/session.provider';
 import { IUserPreferences } from './domain/models/user-preferences.model';
 import { IUserPort } from './domain/ports/user.port';
 import { UserRepositoryAdapter } from './infrastructure/adapters/user.repository';
 import { UserPreferencesRepositoryAdapter } from './infrastructure/adapters/user-preferences.repository';
 import { IUserPreferencesPort } from './domain/ports/user-preferences.port';
-import { IOtpPort } from '../otp/domain/ports/otp.port';
-import { OTPRepositoryAdaptor } from '../otp/infrastructure/adapters/otp.repository';
 
 import { PassportModule } from '@nestjs/passport';
 import { ISessionPort } from '../session/domain/ports/session.port';
@@ -30,25 +27,19 @@ import { TokenManagementService } from '../session/application/services/token-ma
 import { SessionManagementService } from '../session/application/services/session-management.service';
 import { JwtStrategy } from 'src/utils/strategies/jwt.strategy';
 import { LocalStrategy } from 'src/utils/strategies/local.strategy';
-import { EmailjsMailerService } from '../otp/application/services/emailjs-mailer.service';
-import { OtpService } from '../otp/application/services/otp.service';
+import { OtpModule } from '../otp/otp.module';
+import { otpProvider } from '../otp/infrastructure/providers/session.provider';
 
 @Module({
-  imports: [PassportModule, TypeOrmModule.forFeature([User, UserPreferences])],
+  imports: [
+    PassportModule,
+    TypeOrmModule.forFeature([User, UserPreferences]),
+    OtpModule,
+  ],
   controllers: [UserAuthController],
   providers: [
     AuthService,
     JwtService,
-    UserAuthenticationService,
-    TokenManagementService,
-    SessionManagementService,
-    TwoFactorAuthService,
-    MobileVerificationService,
-    UserRegistrationService,
-    RateLimiterService,
-    AuthPolicyService,
-    EmailjsMailerService,
-    OtpService,
     {
       provide: IUserPort,
       useClass: UserRepositoryAdapter,
@@ -56,10 +47,6 @@ import { OtpService } from '../otp/application/services/otp.service';
     {
       provide: IUserPreferencesPort,
       useClass: UserPreferencesRepositoryAdapter,
-    },
-    {
-      provide: IOtpPort,
-      useClass: OTPRepositoryAdaptor,
     },
     {
       provide: ISessionPort,

@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/leocodeio-njs/njs-um/compare/v1.4.0...v1.4.1) (2025-05-06)
+
+
+### Performance Improvements
+
+* **register with mail,implemented:** register with mail,implemented ([2b87645](https://github.com/leocodeio-njs/njs-um/commit/2b87645c6d81de56d179a107a9d4d14f8c3c0197))
+
 # [1.4.0](https://github.com/leocodeio-njs/njs-um/compare/v1.3.1...v1.4.0) (2025-05-06)
 
 

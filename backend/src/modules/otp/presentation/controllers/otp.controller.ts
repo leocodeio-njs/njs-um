@@ -82,9 +82,8 @@ export class OtpController {
   @HttpCode(HttpStatus.OK)
   async confirmMailVerification(@Body() dto: VerifyMailConfirmDto) {
     // Verify OTP using the new service
-    const isValid = this.otpService.verifyToken(
+    const isValid = this.emailjsMailerService.verifyOtpMail(
       dto.email,
-      this.configService.get('TOPT_SECRET') || 'default-salt',
       dto.code,
     );
 

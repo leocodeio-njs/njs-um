@@ -59,7 +59,7 @@ export class MobileVerificationService {
         const otp = await this.otpRepository.save({
           mobile,
           reference: crypto.randomUUID(),
-          verificationSid: twilioVerificationResponse.sid,
+          verificationSid: 'MOBILE' + twilioVerificationResponse.sid,
           expiresAt: new Date(Date.now() + 10 * 60 * 1000),
           verified: false,
         });

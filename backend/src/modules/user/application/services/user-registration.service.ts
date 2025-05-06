@@ -20,7 +20,8 @@ import { IUser } from 'src/modules/user/domain/models/user.model';
 import { IUserPort } from 'src/modules/user/domain/ports/user.port';
 import { IUserPreferencesPort } from 'src/modules/user/domain/ports/user-preferences.port';
 import { IOtpPort } from 'src/modules/otp/domain/ports/otp.port';
-import { OtpService } from 'src/modules/otp/application/services/otp.service';
+import { EmailjsMailerService } from 'src/modules/otp/application/services/emailjs-mailer.service';
+
 @Injectable()
 export class UserRegistrationService {
   constructor(
@@ -29,7 +30,7 @@ export class UserRegistrationService {
     private readonly otpPort: IOtpPort,
     private readonly authPolicyService: AuthPolicyService,
     private readonly configService: ConfigService,
-    private readonly otpService: OtpService,
+    private readonly emailjsMailerService: EmailjsMailerService,
   ) {}
 
   async register(dto: RegisterDto): Promise<UserProfileDto> {
@@ -62,9 +63,8 @@ export class UserRegistrationService {
       this.configService.get<boolean>('MAIL_VERIFICATION') &&
       (dto.channel === 'email' || dto.channel === 'web')
     ) {
-      const isValid = this.otpService.verifyToken(
+      const isValid = this.emailjsMailerService.verifyOtpMail(
         dto.email,
-        this.configService.get('TOPT_SECRET') || 'default-salt',
         dto.mailVerificationCode!,
       );
       console.log('isValid', isValid);

@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/leocodeio-njs/njs-um/compare/v1.3.0...v1.3.1) (2025-05-06)
+
+
+### Performance Improvements
+
+* **updated code at mail implementation:** updated code at mail implementation ([5224a86](https://github.com/leocodeio-njs/njs-um/commit/5224a861039fc45c3619b6cbb88c58ef0ff430fc))
+
 # [1.3.0](https://github.com/leocodeio-njs/njs-um/compare/v1.2.9...v1.3.0) (2025-05-05)
 
 

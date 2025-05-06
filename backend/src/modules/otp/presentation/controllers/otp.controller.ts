@@ -19,6 +19,8 @@ import {
   VerifyMailConfirmDto,
   VerifyMailDto,
 } from 'src/modules/validation/application/dtos/verify-mail.dto';
+import { OtpService } from '../../application/services/otp.service';
+import { ConfigService } from '@nestjs/config';
 
 @UseGuards(IpRateLimitGuard)
 @ApiSecurity('x-api-key')
@@ -27,7 +29,10 @@ export class OtpController {
   constructor(
     private authService: AuthService,
     private emailjsMailerService: EmailjsMailerService,
+    private otpService: OtpService,
+    private configService: ConfigService,
   ) {}
+
   @Post('verify-mobile')
   @ApiOperation({ summary: 'Request mobile OTP' })
   @HttpCode(HttpStatus.OK)
@@ -57,7 +62,15 @@ export class OtpController {
   @ApiOperation({ summary: 'Request email OTP' })
   @HttpCode(HttpStatus.OK)
   async requestMailVerification(@Body() dto: VerifyMailDto) {
-    await this.emailjsMailerService.sendOtpMail(dto.email, dto.name);
+    // Generate OTP using the new service
+    const otp = this.otpService.generateToken(
+      dto.email,
+      this.configService.get('TOPT_SECRET') || 'default-salt',
+    );
+
+    // Send the OTP via email
+    await this.emailjsMailerService.sendOtpMail(dto.email, dto.name, otp);
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Verification code sent',
@@ -68,13 +81,17 @@ export class OtpController {
   @ApiOperation({ summary: 'Confirm email OTP' })
   @HttpCode(HttpStatus.OK)
   async confirmMailVerification(@Body() dto: VerifyMailConfirmDto) {
-    const isValid = await this.emailjsMailerService.verifyOtpMail(
+    // Verify OTP using the new service
+    const isValid = this.otpService.verifyToken(
       dto.email,
+      this.configService.get('TOPT_SECRET') || 'default-salt',
       dto.code,
     );
+
     if (!isValid) {
       throw new UnauthorizedException('Invalid verification code');
     }
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Email verified successfully',

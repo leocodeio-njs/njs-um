@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/leocodeio-njs/njs-um/compare/v1.3.1...v1.4.0) (2025-05-06)
+
+
+### Features
+
+* **login through mail implemented:** login through mail implemented ([a7bc9b4](https://github.com/leocodeio-njs/njs-um/commit/a7bc9b41e3fae35b1414aa607bd2a36e1dd40324))
+
 ## [1.3.1](https://github.com/leocodeio-njs/njs-um/compare/v1.3.0...v1.3.1) (2025-05-06)
 
 
